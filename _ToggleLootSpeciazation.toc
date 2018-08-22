@@ -1,0 +1,8 @@
+﻿## Interface: 80000
+## Title: <老胡>_ToggleLootSpeciazation
+## Notes: 5人本根据当前boss自动切换专精
+## Author: 老胡
+## Version: 8.0
+## SavedVariablesPerCharacter: Rains,enterWorldTime,heartBeatTime,CheckedConfig
+
+_ToggleLootSpeciazation.lua
