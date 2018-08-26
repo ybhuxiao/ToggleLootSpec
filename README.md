@@ -6,7 +6,7 @@
 目前已经支持8.0的10个5人本、奥迪尔、艾泽拉斯的所有boss，喜欢就star一下吧。
 
 微信赞赏：
-[微信赞赏](http://wowdata.top/img/wechat-zan.jpg)
+![微信赞赏](http://wowdata.top/img/wechat-zan.jpg)
 
 ```
 local lootspecs = {
