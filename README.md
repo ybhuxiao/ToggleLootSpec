@@ -7,7 +7,7 @@
 
 微信赞赏：
 
-![微信赞赏](http://wowdata.top/img/wechat-zan.jpg=200x)
+![微信赞赏](http://wowdata.top/img/wechat-zan.jpg=200x200)
 
 ```
 local lootspecs = {
