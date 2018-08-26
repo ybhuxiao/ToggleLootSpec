@@ -5,7 +5,7 @@
 
 目前已经支持8.0的10个5人本、奥迪尔、艾泽拉斯的所有boss，喜欢就star一下吧。
 
-赞赏的话可以用这个：http://wowdata.top/reward.php，支持微信和支付宝。
+赞赏的话可以用这个，支持微信和支付宝。[赞赏](http://wowdata.top/reward.php)
 
 ```
 local lootspecs = {
