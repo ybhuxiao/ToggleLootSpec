@@ -1,6 +1,3 @@
-if not Scorpio then return;end
-Scorpio "ToggleLootSpeciazation" "1.0.0"
-
 --构造专精表
 local spec_table = {}--kv
 local spec_name_arr = {}--arr
@@ -9,11 +6,13 @@ local spec_name_arr = {}--arr
 --local name, description, bossID, rootSectionID, link = EJ_GetEncounterInfoByIndex(bossIndex);
 local dropdownFrames={}
 
+--set
 local function SetBossSpec(bossID,bossName, specName)
   lootspecs[bossName] = specName
   print(json.encode(lootspecs))
 end
 
+--ui
 local function CreateDropDown(bossIndex, bossID, bossName, checkedSpecName)
   local baseFrame = _G["EncounterJournalBossButton"..bossIndex]
   local newFrameName = "EncounterJournalBossButton"..bossID.."DropDown"
@@ -59,26 +58,27 @@ local function CreateDropDown(bossIndex, bossID, bossName, checkedSpecName)
   end
 end
 
---打开冒险指南，显示所有该副本所有boss专精
-__AddonSecureHook__ ("Blizzard_EncounterJournal", "EncounterJournal_DisplayInstance")
-function Hook_EncounterJournal_DisplayInstance(instanceID, noButton)
-  if noButton then return;end
+--hook
+local hookFrame = CreateFrame("Frame");
+hookFrame:RegisterEvent("ADDON_LOADED");
+hookFrame:SetScript("OnEvent", function(self, event,moduleName)
+  if moduleName=="Blizzard_EncounterJournal" then
+    local EncounterJournal_DisplayInstance_original = EncounterJournal_DisplayInstance
+    EncounterJournal_DisplayInstance = function(self,instanceID, noButton)
+      if noButton then return;end
 
-  for i,v in ipairs(dropdownFrames) do
-    v:Hide()
+      for i,v in ipairs(dropdownFrames) do
+        v:Hide()
+      end
+      for bossIndex=1,50,1 do
+        local name, description, bossID, rootSectionID, link = EJ_GetEncounterInfoByIndex(bossIndex)
+        if not bossID then break;end
+        CreateDropDown(bossIndex,bossID,name,GetLootSpecByBossName(name))
+      end
+      return EncounterJournal_DisplayInstance_original(self,instanceID, noButton)
+    end
   end
-  for bossIndex=1,50,1 do
-    local name, description, bossID, rootSectionID, link = EJ_GetEncounterInfoByIndex(bossIndex)
-    if not bossID then break;end
-    CreateDropDown(bossIndex,bossID,name,GetLootSpecByBossName(name))
-  end
-end
-
---点击boss显示拾取专精
-__AddonSecureHook__ ("Blizzard_EncounterJournal", "EncounterJournal_DisplayEncounter")
-function Hook_EncounterJournal_DisplayEncounter(encounterID, noButton)
-  local ename, description, bossID, rootSectionID,link = EJ_GetEncounterInfo(encounterID);
-end
+end)
 
 function GetLootSpecByBossName(bossName)
   local lootSpec = lootspecs[bossName]
