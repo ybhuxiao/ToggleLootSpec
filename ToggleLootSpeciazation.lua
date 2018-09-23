@@ -1,3 +1,16 @@
+--[[
+todo
+因为这个是按boss来的，如果是大秘境，就会导致最后boss的拾取专精，变成了大秘境箱子的专精
+为了防止乌龙事件，大秘境开始就禁用这个插件，然后开始、结束的时候给个提示
+
+CHALLENGE_MODE_START 大秘境开始的事件
+事件开始   就把这个插件禁用   提示"插件已禁用，你当前的拾取专精是xxx"
+结束再给个提示
+
+level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
+level >=2就禁用
+
+]]--
 --构造专精表
 local spec_table = {}--kv
 local spec_name_arr = {}--arr
@@ -129,5 +142,10 @@ local encouterFrame = CreateFrame("Frame");
 encouterFrame:RegisterEvent("ENCOUNTER_START");
 encouterFrame:SetScript("OnEvent", function(self, event,...)
   local encounterID, encounterName, difficulty, size = ...
+  local level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
+  if level>1 then
+    print("大秘境boss，不切换专精")
+    return
+  end
   onEncounterStart(encounterName)
 end)
