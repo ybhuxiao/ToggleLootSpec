@@ -1,5 +1,5 @@
 ﻿## Interface: 80000
-## Title: <老胡>_ToggleLootSpeciazation
+## Title: ToggleLootSpeciazation
 ## Notes: 根据当前boss自动切换拾取专精
 ## Author: 老胡
 ## Version: 8.0
