@@ -9,7 +9,7 @@ local dropdownFrames={}
 --set
 local function SetBossSpec(bossID,bossName, specName)
   lootspecs[bossName] = specName
-  print(json.encode(lootspecs))
+  --print(json.encode(lootspecs))
 end
 
 --ui
@@ -29,7 +29,7 @@ local function CreateDropDown(bossIndex, bossID, bossName, checkedSpecName)
 
   local function OnClick(self)
     UIDropDownMenu_SetSelectedID(newFrame, self:GetID())
-    print(self:GetID(),self:GetText())
+    --print(self:GetID(),self:GetText())
     local specName = self:GetText()
     SetBossSpec(bossID, bossName, specName)
   end
