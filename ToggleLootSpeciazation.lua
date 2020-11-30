@@ -1,13 +1,3 @@
---[[
-todo
-大秘境特殊处理：
-1、大秘境boss不切换（已完成）
-2、大秘境结束提示“你当前的拾取专精是xxx”
-3、增加一个大秘境箱子专精设置
-
-CHALLENGE_MODE_START 大秘境开始的事件
-
-]]--
 --构造专精表
 local spec_table = {}--kv
 local spec_name_arr = {}--arr
@@ -17,10 +7,24 @@ local spec_name_arr = {}--arr
 local dropdownFrames={}
 
 --set
-local function SetBossSpec(bossID,bossName, specName)
+local function SetBossSpec(bossID, bossName, specName)
   lootspecs[bossName] = specName
   --print(json.encode(lootspecs))
 end
+
+--[[
+local function setdefaultspec(spec)
+	default = spec
+end
+
+local function get_mythicplus_spec(map)
+	return mythicplus[map]
+end
+
+local function set_mythicplus_spec(map, spec)
+	mythicplus[map] = spec
+end
+--]]
 
 --ui
 local function CreateDropDown(bossIndex, bossID, bossName, checkedSpecName)
@@ -35,7 +39,7 @@ local function CreateDropDown(bossIndex, bossID, bossName, checkedSpecName)
 
   newFrame = CreateFrame("Button", "EncounterJournalBossButton"..bossIndex.."DropDown", baseFrame, "UIDropDownMenuTemplate")
   tinsert(dropdownFrames,newFrame)
-  newFrame:SetPoint("TOPRIGHT", baseFrame,"BOTTOMRIGHT",15,20)--右下角，偏下
+  newFrame:SetPoint("BOTTOMRIGHT", baseFrame,"BOTTOMRIGHT",15,0)--右下角
 
   local function OnClick(self)
     UIDropDownMenu_SetSelectedID(newFrame, self:GetID())
@@ -87,6 +91,7 @@ hookFrame:SetScript("OnEvent", function(self, event,moduleName)
       end
       return EncounterJournal_DisplayInstance_original(self,instanceID, noButton)
     end
+    hookFrame:UnregisterEvent("ADDON_LOADED") --注销事件
   end
 end)
 
@@ -98,6 +103,9 @@ end
 
 local enteringWorldFrame = CreateFrame("Frame")
 enteringWorldFrame:SetScript("OnEvent", function()
+  spec_table={}
+  spec_name_arr={} --重置专精表
+  
   for i=1,4 do
     local specId, specName = GetSpecializationInfo(i)
     if specName then
@@ -107,27 +115,22 @@ enteringWorldFrame:SetScript("OnEvent", function()
   end
 
   lootspecs = lootspecs or {}
-  print("ToggleLootSpeciazation加载完成，请在“冒险指南”中设置拾取专精，设置完成后，进入战斗就会自动切换专精。有bug可反馈给我QQ376665005")
+  --print("加载完成")
 end)
 enteringWorldFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 --onEncounterStart
 function onEncounterStart(encounterName)
-  --目标拾取专精
-  local targetSpecName = lootspecs[encounterName]
-
+  local targetSpecName = lootspecs[encounterName] --目标拾取专精
   if targetSpecName==nil or targetSpecName=="" then
     print("当前boss未设置拾取专精");
-    return;
-  end--为空表示任何专精都ok
-  local targetSpecId = spec_table[targetSpecName]
-
-  --当前拾取专精id，例如神圣65、防护66、惩戒70
-  local nowSpecId = GetLootSpecialization()
-
-
-  --如果专精相同则不做处理，不相同，则切换到目标专精
-  if targetSpecId~=nowSpecId then
+    return; --为空表示任何专精都ok
+  end
+  
+  local targetSpecId = spec_table[targetSpecName] 
+  local nowSpecId = GetLootSpecialization() --拾取专精id，0为当前拾取专精
+  
+  if targetSpecId~=nowSpecId then --如果专精相同则不做处理，不相同，则切换到目标专精
     print("切换拾取专精为：",targetSpecName)
     SetLootSpecialization(targetSpecId)
   else
@@ -141,8 +144,37 @@ encouterFrame:SetScript("OnEvent", function(self, event,...)
   local encounterID, encounterName, difficulty, size = ...
   local level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
   if level>1 then
-    print("大秘境boss，不切换专精")
+    --print("大秘境boss，不切换专精")
     return
   end
   onEncounterStart(encounterName)
 end)
+
+--todo M+
+--[[
+local events = {}
+function events:CHALLENGE_MODE_START()
+	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	print("M+ start")
+	SetLootSpecialization(set_mythicplus_spec)
+end
+
+local next_azerite_is_mp_box = false
+function events:CHALLENGE_MODE_COMPLETED()
+	self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+
+	local map = C_ChallengeMode.GetCompletionInfo()
+--	if set_spec(get_mythicplus_spec(map)) then
+--		print("M+已完成，拾取后恢复默认专精拾取")
+--	end
+	next_azerite_is_mp_box = true
+end
+
+function events:AZERITE_ITEM_EXPERIENCE_CHANGED()
+	if next_azerite_is_mp_box then
+		print("战利品已拾取，恢复默认专精拾取")
+		next_azerite_is_mp_box = false
+		--set_spec(get_default_spec())
+	end
+end
+--]]
