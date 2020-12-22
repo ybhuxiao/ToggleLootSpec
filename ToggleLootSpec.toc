@@ -1,8 +1,8 @@
 ## Interface: 90002
-## Title: ToggleLootSpeciazation
+## Title: ToggleLootSpec
 ## Notes: 根据当前boss自动切换拾取专精，请在“冒险指南”中设置
 ## Author: 老胡、Yongri
 ## Version: 9.0
 ## SavedVariablesPerCharacter: lootspecs
 
-ToggleLootSpeciazation.lua
+ToggleLootSpec.lua
