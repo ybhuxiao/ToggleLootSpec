@@ -1,5 +1,5 @@
 
-# ToggleLootSpeciazation
+# ToggleLootSpec
 支持魔兽9.0，也支持之前的boss，5人本、团本都可以。
 
 9.x版本现在由[Yongri](https://bbs.nga.cn/nuke.php?func=ucp&uid=16610765)在维护，更新地址：https://bbs.nga.cn/read.php?tid=24392745
