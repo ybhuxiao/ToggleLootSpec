@@ -152,8 +152,8 @@ end)
 enteringWorldFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 --onEncounterStart
-function onEncounterStart(encounterName)
-    local targetSpecName = lootspecs[encounterName] --目标拾取专精
+function onEncounterStart(bossName)
+    local targetSpecName = lootspecs[bossName] --目标拾取专精
     if targetSpecName == nil or targetSpecName == "" then
         print("当前boss未设置拾取专精");
         return ; --为空表示任何专精都ok
@@ -171,6 +171,11 @@ function onEncounterStart(encounterName)
     end
 end
 
+local encounter_boss_rel={
+    ['test1']='1',
+    ['test2']='2',
+}
+
 local encouterFrame = CreateFrame("Frame");
 encouterFrame:RegisterEvent("ENCOUNTER_START");
 encouterFrame:SetScript("OnEvent", function(self, event, ...)
@@ -180,7 +185,9 @@ encouterFrame:SetScript("OnEvent", function(self, event, ...)
         --print("大秘境boss，不切换专精")
         return
     end
-    onEncounterStart(encounterName)
+    
+    local bossName = encounter_boss_rel[encouterFrame] or encouterFrame
+    onEncounterStart(bossName)
 end)
 
 --todo M+
