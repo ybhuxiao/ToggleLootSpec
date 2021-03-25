@@ -5,7 +5,7 @@
 9.x版本现在由[Yongri](https://bbs.nga.cn/nuke.php?func=ucp&uid=16610765)在维护，更新地址：https://bbs.nga.cn/read.php?tid=24392745
 
 
-喜欢就star一下吧，有问题咨询老胡：QQ376665005
+喜欢就star一下吧，对插件开发有兴趣可以加群：718963346
 
 
 示例：
